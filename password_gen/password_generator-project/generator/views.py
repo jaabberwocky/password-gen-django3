@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 import string
 import random
+from datetime import datetime
 
 
 def home(request):
@@ -71,6 +72,7 @@ def generate_pwd(passwd_length: int, lower: bool = False, upper: bool = False, n
         str: Generated password
     """
     assert passwd_length > 0
+    random.seed(datetime.now())
     chars = ''
 
     if lower:
