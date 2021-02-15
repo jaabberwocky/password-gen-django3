@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.contrib import messages
 import string
 import random
 
@@ -20,14 +21,33 @@ def password(request):
         numbers = True
     if request.GET.get('specials'):
         specials = True
-
-    thepassword = generate_pwd(length, upper, numbers, specials)
-
-    return render(request, 'generator/password.html', {'password': thepassword})
+    
+    if has_two_options(upper,numbers,specials):
+        thepassword = generate_pwd(length, upper, numbers, specials)
+        return render(request, 'generator/password.html', {'password': thepassword})
+    else:
+        # redirect with flash of message indicating error
+        messages.add_message(request, messages.ERROR, "ERROR: 2 or more options must be selected.")
+        return redirect('home')
 
 def about(request):
     return render(request, 'generator/about.html')
 
+def has_two_options(upper:bool,numbers:bool,specials:bool) -> bool:
+    """
+    Returns True if 2 or more options are selected based on the boolean values.
+
+    Args:
+        upper (bool): If uppercase is selected
+        numbers (bool): If numbers is selected
+        specials (bool): If special characters is selected
+
+    Returns:
+        bool: 2 or more options are True
+    """
+    truth_values = (upper, numbers, specials)
+    true_count = sum(1 for v in truth_values if v)
+    return true_count >= 2
 
 def generate_pwd(passwd_length: int, upper: bool = False, numbers: bool = False, specials=False) -> str:
     """
