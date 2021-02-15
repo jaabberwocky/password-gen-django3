@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.contrib import messages
 import string
 import random
@@ -7,39 +6,48 @@ from datetime import datetime
 
 
 def home(request):
-    return render(request, 'generator/home.html')
+    return render(request, "generator/home.html")
 
 
 def password(request):
-    lower, upper, numbers, specials = (False, ) * 4
-    def clamp(n, minn, maxn): return max(min(maxn, n), minn)
+    lower, upper, numbers, specials = (False,) * 4
 
-    length = clamp(int(request.GET.get('length', '12')), 8, 18)
+    def clamp(n, minn, maxn):
+        return max(min(maxn, n), minn)
 
-    if request.GET.get('lowercase'):
+    length = clamp(int(request.GET.get("length", "12")), 8, 18)
+
+    if request.GET.get("lowercase"):
         lower = True
-    if request.GET.get('uppercase'):
+    if request.GET.get("uppercase"):
         upper = True
-    if request.GET.get('numbers'):
+    if request.GET.get("numbers"):
         numbers = True
-    if request.GET.get('specials'):
+    if request.GET.get("specials"):
         specials = True
 
     if has_two_options(lower, upper, numbers, specials):
         thepassword = generate_pwd(length, lower, upper, numbers, specials)
-        return render(request, 'generator/password.html', {'password': thepassword})
+        return render(
+            request, "generator/password.html", {"password": thepassword}
+        )  # noqa
     else:
         # redirect with flash of message indicating error
-        messages.add_message(request, messages.ERROR,
-                             "ERROR: 2 or more options must be selected.")
-        return redirect('home')
+        messages.add_message(
+            request,
+            messages.ERROR,
+            "ERROR: 2 or more options must be selected.",  # noqa
+        )
+        return redirect("home")
 
 
 def about(request):
-    return render(request, 'generator/about.html')
+    return render(request, "generator/about.html")
 
 
-def has_two_options(lower: bool, upper: bool, numbers: bool, specials: bool) -> bool:
+def has_two_options(
+    lower: bool, upper: bool, numbers: bool, specials: bool
+) -> bool:  # noqa
     """
     Returns True if 2 or more options are selected based on the boolean values.
 
@@ -57,7 +65,13 @@ def has_two_options(lower: bool, upper: bool, numbers: bool, specials: bool) -> 
     return true_count >= 2
 
 
-def generate_pwd(passwd_length: int, lower: bool = False, upper: bool = False, numbers: bool = False, specials=False) -> str:
+def generate_pwd(
+    passwd_length: int,
+    lower: bool = False,
+    upper: bool = False,
+    numbers: bool = False,
+    specials=False,
+) -> str:
     """
     Generates password given length, whether it will be upper case, has numbers, or with special characters.
 
@@ -70,10 +84,10 @@ def generate_pwd(passwd_length: int, lower: bool = False, upper: bool = False, n
 
     Returns:
         str: Generated password
-    """
+    """ # noqa
     assert passwd_length > 0
     random.seed(datetime.now())
-    chars = ''
+    chars = ""
 
     if lower:
         chars += string.ascii_lowercase
@@ -84,7 +98,7 @@ def generate_pwd(passwd_length: int, lower: bool = False, upper: bool = False, n
     if specials:
         chars += string.punctuation
 
-    passwd = ''
+    passwd = ""
     for _ in range(passwd_length):
         passwd += random.choice(chars)
 
