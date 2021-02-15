@@ -11,7 +11,7 @@ def home(request):
 
 def password(request):
     lower, upper, numbers, specials = (False, ) * 4
-    clamp = lambda n, minn, maxn: max(min(maxn, n), minn)
+    def clamp(n, minn, maxn): return max(min(maxn, n), minn)
 
     length = clamp(int(request.GET.get('length', '12')), 8, 18)
 
@@ -23,19 +23,22 @@ def password(request):
         numbers = True
     if request.GET.get('specials'):
         specials = True
-    
-    if has_two_options(lower, upper,numbers,specials):
-        thepassword = generate_pwd(length, upper, numbers, specials)
+
+    if has_two_options(lower, upper, numbers, specials):
+        thepassword = generate_pwd(length, lower, upper, numbers, specials)
         return render(request, 'generator/password.html', {'password': thepassword})
     else:
         # redirect with flash of message indicating error
-        messages.add_message(request, messages.ERROR, "ERROR: 2 or more options must be selected.")
+        messages.add_message(request, messages.ERROR,
+                             "ERROR: 2 or more options must be selected.")
         return redirect('home')
+
 
 def about(request):
     return render(request, 'generator/about.html')
 
-def has_two_options(lower:bool, upper:bool,numbers:bool,specials:bool) -> bool:
+
+def has_two_options(lower: bool, upper: bool, numbers: bool, specials: bool) -> bool:
     """
     Returns True if 2 or more options are selected based on the boolean values.
 
@@ -52,7 +55,8 @@ def has_two_options(lower:bool, upper:bool,numbers:bool,specials:bool) -> bool:
     true_count = sum(1 for v in truth_values if v)
     return true_count >= 2
 
-def generate_pwd(passwd_length: int, lower:bool = False, upper: bool = False, numbers: bool = False, specials=False) -> str:
+
+def generate_pwd(passwd_length: int, lower: bool = False, upper: bool = False, numbers: bool = False, specials=False) -> str:
     """
     Generates password given length, whether it will be upper case, has numbers, or with special characters.
 
