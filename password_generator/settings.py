@@ -27,9 +27,9 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'Optional default value')
 if os.getenv('PROD', True):
     DEBUG = False
 else:
-    DEBUG = TRUE
+    DEBUG = True
 
-ALLOWED_HOSTS = os.getenv('DJANGO_ALOWED_HOSTS', ['.localhost'])
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
