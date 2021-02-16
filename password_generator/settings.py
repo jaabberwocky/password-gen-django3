@@ -29,7 +29,7 @@ if os.getenv('PROD', True):
 else:
     DEBUG = TRUE
 
-ALLOWED_HOSTS = ['.localhost']
+ALLOWED_HOSTS = os.getenv('DJANGO_ALOWED_HOSTS', ['.localhost'])
 
 # Application definition
 
