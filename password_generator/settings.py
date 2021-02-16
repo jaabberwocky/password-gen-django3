@@ -29,7 +29,6 @@ if os.getenv('PROD', True):
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
