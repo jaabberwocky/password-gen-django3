@@ -1,16 +1,15 @@
 from django.test import TestCase
-from generator.views import generate_pwd
+from generator.views import generate_pwd  # noqa
 import string
 
-# Create your tests here.
-class PasswordGeneratorTest(TestCase):
 
+class PasswordGeneratorTest(TestCase):
     def test_len(self):
         pwd = generate_pwd(5, lower=True)
         self.assertEqual(5, len(pwd))
 
     def test_len_2(self):
-        pwd = generate_pwd(18, lower=True, upper=True, specials=True, numbers=True)
+        pwd = generate_pwd(18, lower=True, upper=True, specials=True, numbers=True) # noqa
         self.assertEqual(18, len(pwd))
 
     def test_only_lower(self):
